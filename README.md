@@ -7,6 +7,7 @@ This is a parallel version with one task per time step.
 To compile it, find your $machine
 
 . setup_${machine}.sh
+
 make
 
 
