@@ -7,6 +7,9 @@ gefscyc=00
 let tstepdiff=$cyc-$gefscyc
 
 ORIGDIR=/scratch2/NCEPDEV/fv3-cam/noscrub/Youhua.Tang/lam-cmaq3/expt_dirs/test_update/$PDY$cyc/INPUT
+if [ ! -s gefs-input-$PDY ]; then
+ln -s /scratch2/NCEPDEV/fv3-cam/noscrub/Youhua.Tang/aqm_parallel_glbc.fd/gefs-input-$PDY .
+fi
 if [ ! -s gefs-input-$PDY/gfs.t${gefscyc}z.atmf000.nemsio ]; then
  echo "can not find gefs-input-$PDY/gfs.t${gefscyc}z.atmf000.nemsio"
  exit 1
