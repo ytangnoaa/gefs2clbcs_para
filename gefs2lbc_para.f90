@@ -68,7 +68,7 @@
 
       integer  begyear,begdate,begtime,dtstep,numts,tstepdiff      
       namelist /control/bndname,dtstep,tstepdiff,mofile,	&	  !  input file preffix and suffix
-       lbcfile,topofile
+       lbcfile,topofile,inblend  ! inside blending layers
       
       CALL MPI_Init(ierr)
       CALL MPI_Comm_rank(MPI_COMM_WORLD, my_rank, ierr)
@@ -76,7 +76,8 @@
       
       call aq_blank(16*nspecies,bndname)
       call aq_blank(16*nspecies,checkname)
-
+      
+      inblend=0.
       sfact(1:ngocart,1:nspecies)=0.
       checkfact(1:ngocart,1:nspecies)=0.
 ! read converting information
@@ -149,7 +150,9 @@
       call check(nf90_inquire_dimension(ncid,iddim_lat,len=nlat))
       call check(nf90_inq_dimid(ncid,'halo',iddim_halo))
       call check(nf90_inquire_dimension(ncid,iddim_halo,len=nhalo))
-      jmax=jmax1-nhalo*2
+      
+      nhalo_outside=nhalo-inblend ! outside halo layers
+      jmax=jmax1-nhalo_outside*2
       if(nlon.ne.imax.or.nlat.ne.jmax) then
         print*,'dimension mismatch ',nlon,imax,nlat,jmax
 	stop
@@ -319,7 +322,7 @@
 ! --- left and right
        
       do j=1,jmax
-       jy=j+nhalo
+       jy=j+nhalo_outside
            
 	do i=1,nhalo
 	 do m=1,2
